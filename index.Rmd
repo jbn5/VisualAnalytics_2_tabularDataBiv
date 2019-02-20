@@ -190,10 +190,7 @@ bars4
 
   
 ```{r orderFacet, eval=FALSE}
-base  = ggplot(df.C, aes(x = reorder(Crime, Percent), y = Percent ) ) 
-bars1 = base + geom_segment(aes(y = 0, x = reorder(Crime, Percent), yend = Percent, xend = Crime), stat = 'identity', color = "black")
-bars2 = bars1 + facet_wrap( ~ Daytime ,nrow = 1) 
-bars2 + coord_flip() + theme(axis.text.y = element_text(size=4,angle = 60)) 
+
 ```
 
 ```{r}
@@ -498,12 +495,14 @@ minsMaxsMd= minsMaxs + stat_summary(fun.y=median,size=2,
                                     aes(group=2,col='Median'))
 all3=minsMaxsMd + scale_colour_manual(name="Trends",
                                       values=c("blue", "black","red"))
-all3+coord_flip()
+all4 = all3 + theme(axis.title.y=element_text(vjust = 2.5), axis.title.x = element_text(vjust = -1),panel.background = element_rect(fill = 'gray95'), plot.title=(element_text(hjust=0.5)), plot.caption=element_text(vjust=-1.5)) + labs(title = "Weeks To Report Based on Crime", caption = "Source: City of Seattle Crime Data", x = "Type of Crime", y = "Reporting Time (Measured in Weeks)")
+#all3+coord_flip()
+all4 + coord_flip()
 ```
 
 <a id='ex3'></a>
-<span style="color:red"> Exercise 3:<br> Complete the information needed in the previous plots.
-</span>
+<span style="color:red"> 
+Exercise 3:<br> Complete the information needed in the previous plots.
 
 It is very common to hear in scientific texts about the mean difference test known as the **one-way anova**, which beyond describing, as we have done, seeks to show if the mean of the numerical variable varies or not accross the values of the categorical groups.
 
@@ -659,9 +658,12 @@ The palettes can be selected from the [brewer colors website](http://colorbrewer
 base = ggplot(num_num, aes(daysByNeigh,crimesByNeigh)) 
 scatp1 = base +  stat_density_2d(aes(fill = ..density..), 
                                  geom = "raster", contour = FALSE)
+
 scatp2=scatp1+geom_text_repel(aes(label=ifelse(crimesByNeigh>=5,
                                                num_num$rowname, "")))
-scatp3 = scatp2 +  theme(legend.position='none') 
+
+scatp3 = scatp2 +  theme(legend.position='none', axis.title.y = element_text(size=10, vjust = 3), axis.title.x = element_text(size = 10, vjust = 0), title = element_text(size = 8)) + labs(x = "Average Days To Report", y = "Proportion of Crime", title = "Proportion of Crime and Average Days to Report Per Neighborhood", caption = "Source: City of Seattle Crime Data")
+
 scatp4= scatp3 + scale_fill_distiller(palette="Greys", direction=1) 
 scatp4
 ```
@@ -669,8 +671,8 @@ scatp4
 The extra space you see can dissappear using:
 
 ```{r, eval=FALSE}
-scatp5 = scatp4 +  scale_x_continuous(expand = c(0, 0)) + 
-         scale_y_continuous(expand = c(0, 0)) 
+scatp5 = scatp4 +  scale_x_continuous(expand = c(0, 0), breaks=seq(0,16,2)) + 
+         scale_y_continuous(expand = c(0, 0), limits=c(0,5)) 
 scatp5
 ```
 
